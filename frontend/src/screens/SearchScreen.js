@@ -187,6 +187,7 @@ export default function SearchScreen() {
                 <li key={r.name}>
                   <Link
                     to={getFilterUrl({ rating: r.rating })}
+                    style={{ textDecoration: 'none' }}
                     className={`${r.rating}` === `${rating}` ? 'text-bold' : ''}
                   >
                     <Rating caption={' & up'} rating={r.rating}></Rating>
@@ -197,6 +198,7 @@ export default function SearchScreen() {
                 <Link
                   to={getFilterUrl({ rating: 'all' })}
                   className={rating === 'all' ? 'text-bold' : ''}
+                  style={{ textDecoration: 'none' }}
                 >
                   <Rating caption={' & up'} rating={0}></Rating>
                 </Link>

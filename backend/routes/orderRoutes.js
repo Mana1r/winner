@@ -86,6 +86,21 @@ orderRouter.get(
     res.send(orders);
   })
 );
+orderRouter.put(
+  '/:id/deliver',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+      await order.save();
+      res.send({ message: 'Order Delivered' });
+    } else {
+      res.status(404).send({ message: 'Order Not Found' });
+    }
+  })
+);
 orderRouter.get(
   '/:id',
   isAuth,
@@ -93,6 +108,20 @@ orderRouter.get(
     const order = await Order.findById(req.params.id);
     if (order) {
       res.send(order);
+    } else {
+      res.status(404).send({ message: 'Order Not Found' });
+    }
+  })
+);
+orderRouter.delete(
+  '/:id',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      await order.remove();
+      res.send({ message: 'Order Deleted' });
     } else {
       res.status(404).send({ message: 'Order Not Found' });
     }
