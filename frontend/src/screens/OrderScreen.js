@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { Store } from '../Store';
 import { getError } from '../utils';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
+import StripeCheckout from 'react-stripe-checkout';
 //import Button from 'react-bootstrap/esm/Button';
 
 function reducer(state, action) {
@@ -74,7 +75,24 @@ export default function OrderScreen() {
     successPay: false,
     loadingPay: false,
   });
-
+  const priceForStripe = order.totalPrice;
+  const payNow = async (token) => {
+    try {
+      const reponse = await axios({
+        url: 'http://localhost:5000/payment',
+        method: 'post',
+        data: {
+          amount: order.totalPrice,
+          token,
+        },
+      });
+      if (reponse.status === 200) {
+        console.log('Your payment was succusseful');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
   function createOrder(data, actions) {
@@ -315,28 +333,19 @@ export default function OrderScreen() {
                         )}{' '}
                       </div>
                         )*/
-
-                      <form
-                        method="post"
-                        action="https://https://sandbox.paymee.tn/gateway/"
-                      >
-                        <input
-                          type="hidden"
-                          name="payment_token"
-                          value="f137809be1a126357f8d3907c379ef5004cef72c"
-                        ></input>
-                        <input
-                          type="hidden"
-                          name="url_ok"
-                          value="https://example.com/ok.php"
-                        ></input>
-                        <input
-                          type="hidden"
-                          name="url_ko"
-                          value="https://example.com/ko.php"
-                        ></input>
-                        <button>Payer</button>
-                      </form>
+                      <div>
+                        <StripeCheckout
+                          stripeKey="pk_test_51KtuN2LHrrvoAMNAtiB1RFCwurUzli3T57s9CLogsFI03ZUUWfEHX0TIQhwWTAvJPGH8nIa33SNn1h18OtfwKKO800p8c1gJtv"
+                          label="Pay Now"
+                          name="Winner"
+                          image="https://i.pinimg.com/originals/33/08/56/330856dfe4496d8af60648c78a6ba376.jpg"
+                          billingAddress
+                          shippingAddress
+                          description={`Your total is $${priceForStripe}`}
+                          amount={priceForStripe * 100}
+                          token={payNow}
+                        ></StripeCheckout>
+                      </div>
                     )}
                     {loadingPay && <LoadingBox></LoadingBox>}
                   </ListGroup.Item>
