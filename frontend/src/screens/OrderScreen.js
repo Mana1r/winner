@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import StripeCheckout from 'react-stripe-checkout';
 //import Button from 'react-bootstrap/esm/Button';
+import StripeContainer from '../components/StripeContainer';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -75,7 +76,7 @@ export default function OrderScreen() {
     successPay: false,
     loadingPay: false,
   });
-  const priceForStripe = order.totalPrice;
+  /*  const priceForStripe = order.totalPrice;
   const payNow = async (token) => {
     try {
       const reponse = await axios({
@@ -92,7 +93,7 @@ export default function OrderScreen() {
     } catch (error) {
       console.log(error);
     }
-  };
+  };*/
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
   function createOrder(data, actions) {
@@ -162,20 +163,25 @@ export default function OrderScreen() {
         dispatch({ type: 'DELIVER_RESET' });
       }
     } else {
-      const loadPaypalScript = async () => {
-        const { data: clientId } = await axios.get('/api/keys/paypal', {
-          headers: { authorization: `Bearer ${userInfo.token}` },
-        });
-        paypalDispatch({
-          type: 'resetOptions',
-          value: {
-            'client-id': clientId,
-            currency: 'EUR',
-          },
-        });
-        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
-      };
-      loadPaypalScript();
+      if (order.paymentMethod === 'PayPal') {
+        const loadPaypalScript = async () => {
+          const { data: clientId } = await axios.get('/api/keys/paypal', {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+          });
+          paypalDispatch({
+            type: 'resetOptions',
+            value: {
+              'client-id': clientId,
+              currency: 'EUR',
+            },
+          });
+          paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+        };
+        loadPaypalScript();
+      } else {
+        console.log('stripe ::');
+      }
+      ///////
     }
   }, [
     order,
@@ -186,6 +192,7 @@ export default function OrderScreen() {
     successPay,
     successDeliver,
   ]);
+
   async function deliverOrderHandler() {
     try {
       dispatch({ type: 'DELIVER_REQUEST' });
@@ -203,6 +210,12 @@ export default function OrderScreen() {
       dispatch({ type: 'DELIVER_FAIL' });
     }
   }
+
+  ///////////////////////////////////
+
+  const [showItem, setShowItem] = useState(false);
+  /////////
+
   return loading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
@@ -265,9 +278,13 @@ export default function OrderScreen() {
                         <Link to={`/product/${item.slug}`}>{item.name}</Link>
                       </Col>
                       <Col md={3}>
-                        <span>{item.quantity}</span>
+                        <span>
+                          <h4>quantity : {item.quantity}</h4>
+                        </span>
                       </Col>
-                      <Col md={3}>{item.price} DT</Col>
+                      <Col md={3}>
+                        <h4>price : {item.price} DT</h4>
+                      </Col>
                     </Row>
                   </ListGroup.Item>
                 ))}
@@ -321,6 +338,18 @@ export default function OrderScreen() {
                         ></PayPalButtons>
                       </div>
                     ) : (
+                      <div className="App">
+                        {showItem ? (
+                          <StripeContainer />
+                        ) : (
+                          <>
+                            <button onClick={() => setShowItem(true)}>
+                              Paiement
+                            </button>
+                          </>
+                        )}
+                      </div>
+
                       /* (
                       <div>
                         <h2> PAYMENT CASH : </h2>
@@ -333,10 +362,11 @@ export default function OrderScreen() {
                         )}{' '}
                       </div>
                         )*/
-                      <div>
+                      /*
+                      <div/>
                         <StripeCheckout
                           stripeKey="pk_test_51KtuN2LHrrvoAMNAtiB1RFCwurUzli3T57s9CLogsFI03ZUUWfEHX0TIQhwWTAvJPGH8nIa33SNn1h18OtfwKKO800p8c1gJtv"
-                          label="Pay Now"
+                          l*abel="Pay Now"
                           name="Winner"
                           image="https://i.pinimg.com/originals/33/08/56/330856dfe4496d8af60648c78a6ba376.jpg"
                           billingAddress
@@ -345,7 +375,7 @@ export default function OrderScreen() {
                           amount={priceForStripe * 100}
                           token={payNow}
                         ></StripeCheckout>
-                      </div>
+                      </div>*/
                     )}
                     {loadingPay && <LoadingBox></LoadingBox>}
                   </ListGroup.Item>

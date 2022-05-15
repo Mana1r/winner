@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300&display=swap');
-.input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n + 3),
+/*.input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n + 3),
 .input-group:not(.has-validation)
   > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
   border-top-right-radius: 0;
@@ -7,6 +7,45 @@
   margin-top: 0.18cm;
   width: 8cm;
   height: 1.2cm;
+}*/
+input#name.form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-top: 0.18cm;
+  width: 12cm;
+  height: 1.2cm;
+}
+input#email.form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-top: 0.18cm;
+  width: 12cm;
+  height: 1.2cm;
+}
+
+input#password.form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-top: 0.18cm;
+  width: 12cm;
+  height: 1.2cm;
+}
+input#confirmPassword.form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-top: 0.18cm;
+  width: 12cm;
+  height: 1.2cm;
+}
+input#q.form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-top: 0.18cm;
+  width: 8cm;
+  height: 1.2cm;
+}
+.ElementsApp .InputElement.is-invalid {
+  color: #04185f;
 }
 body {
   margin: 0;
@@ -108,6 +147,81 @@ main {
 .text-bold {
   font-weight: bold;
 }
+/*
+ElementsApp,
+.ElementsApp .InputElement {
+  color: #282c34;
+  font-weight: 500;
+  font-family: Roboto, Open Sans, Segoe UI, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.FormGroup {
+  margin: 0 15px 20px;
+  padding: 0;
+  border-style: none;
+  background-color: #7795f8;
+  will-change: opacity, transform;
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #829fff;
+  border-radius: 4px;
+}
+
+.FormRow {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-left: 15px;
+  border-top: 1px solid #819efc;
+}
+
+.StripeElement--webkit-autofill {
+  background: transparent !important;
+}
+
+.StripeElement {
+  width: 100%;
+  padding: 11px 15px 11px 0;
+}
+
+button {
+  display: block;
+  font-size: 16px;
+  width: calc(100% - 30px);
+  height: 40px;
+  margin: 40px 15px 0;
+  background-color: #f6a4eb;
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #ffb9f6;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 100ms ease-in-out;
+  will-change: transform, background-color, box-shadow;
+  border: none;
+}
+
+button:active {
+  background-color: #d782d9;
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #e298d8;
+  transform: scale(0.99);
+}
+
+.App {
+  margin-left: 25%;
+  margin-top: 5%;
+  margin-right: 25%;
+}
+
+h1,
+h3 {
+  text-align: center;
+}*/
 
 /* Dashboard */
 
@@ -139,5 +253,6 @@ main {
 button.thumbnail {
   padding: 0;
 }
+
 /*footer.contact {
 }*/

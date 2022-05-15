@@ -8,7 +8,47 @@ import userRouter from './routes/userRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
 import uploadRouter from './routes/uploadRoutes.js';
 
+import Stripe from 'stripe';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 dotenv.config();
+
+const app = express();
+app.use(express.json());
+console.log('-----> ', process.env.STRIPE_SECRET_TEST);
+const stripe = new Stripe(process.env.STRIPE_SECRET_TEST);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors());
+
+//app.use(express.urlencoded({ extended: true }));
+
+app.post('/payment', cors(), async (req, res) => {
+  let { amount, id } = req.body;
+  try {
+    const payment = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: 'USD',
+      description: 'Winner',
+      payment_method: id,
+      confirm: true,
+    });
+    console.log('Payment', payment);
+    res.json({
+      message: 'Payment successful',
+      success: true,
+    });
+  } catch (error) {
+    console.log('Error', error);
+    res.json({
+      message: error, //'Payment failed',
+      success: false,
+    });
+  }
+});
+
+////////////////////////////////
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -18,10 +58,6 @@ mongoose
   .catch((err) => {
     console.log(err.message);
   });
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.get('/api/keys/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
